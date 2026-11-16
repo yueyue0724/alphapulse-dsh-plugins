@@ -1,11 +1,21 @@
 {
   "name": "alphapulse-quantify-mcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Alphapulse Quantify: read-only quant-research tools (aquant strategies, paper accounts, market data) for DeepSeek Harness over MCP.",
   "type": "module",
   "license": "UNLICENSED",
-  "keywords": ["alphapulse", "dsh", "deepseek-harness", "mcp", "quant", "aquant"],
-  "engines": { "dsh": ">=0.2.2-rc.3", "node": ">=18" },
+  "keywords": [
+    "alphapulse",
+    "dsh",
+    "deepseek-harness",
+    "mcp",
+    "quant",
+    "aquant"
+  ],
+  "engines": {
+    "dsh": ">=0.2.2-rc.3",
+    "node": ">=18"
+  },
   "exports": {
     "./locale/*.json": "./locale/*.json",
     "./icon": "./icon.svg",
@@ -19,5 +29,18 @@
     "server",
     "README.md"
   ],
-  "dsh": { "bundle": { "patch": "./cordis.patch.yml" } }
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yueyue0724/alphapulse-dsh-plugins.git",
+    "directory": "alphapulse-quantify-mcp"
+  },
+  "homepage": "https://github.com/yueyue0724/alphapulse-dsh-plugins#readme",
+  "bugs": {
+    "url": "https://github.com/yueyue0724/alphapulse-dsh-plugins/issues"
+  }
 }
