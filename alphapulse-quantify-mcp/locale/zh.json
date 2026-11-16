@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "Alphapulse 量化研究台",
+    "description": "把 Alphapulse Quantify 工作区的 aquant 只读能力接入 agent：16 个工具覆盖策略清单、信号预览、模拟盘状态、数据健康、定时任务与推送记录、Alpha1 研究状态、回测产物，以及日线、复权因子、估值截面、证券资格、交易日历与指数日线。工具名形如 mcp__quantify__bars。全部工具无副作用：不写库、不下单、不发消息；信号预览只计算、不发布。行情、估值、资格与日历经本机配置的只读 Mongo 身份读取研究库（当前经 SSH 隧道指向 dgx8001-quant，不是 Mac mini 生产库，副本不随生产更新）；模拟盘账本经 Supabase 只读连接读取生产账本，因此账户日期通常比研究库行情更新——把某天当作最新交易日之前先用 data_health 确认。生产写入与推送在 Mac mini 上运行，不在本插件内。关闭插件即移除全部 mcp__quantify__* 工具。",
+    "detail": "docs/DETAIL.zh.md"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "Alphapulse research console",
+    "description": "Brings the Alphapulse Quantify workspace's read-only aquant tools to the agent: 16 tools for strategy inventory, signal previews, paper-trading status, data freshness, scheduled-job and notification records, Alpha1 research status, backtest artifacts, and daily bars, adjustment factors, valuation snapshots, security eligibility, trading calendar, and index series. Tools appear as mcp__quantify__*. Every tool is side-effect free: no database writes, no orders, and no messages; a signal preview is computed but never published. Market data, valuations, eligibility, and the calendar are read from the research Mongo database through this machine's read-only identity — currently an SSH tunnel to dgx8001-quant, not the Mac mini production database, and that copy does not follow production updates. Paper-trading accounts come from the production Supabase ledger over a read-only connection, so account dates are usually newer than the research bars; check data_health before treating a date as the latest session. Production writes and notifications run on the Mac mini and are not part of this plugin. Turning the plugin off removes every mcp__quantify__* tool.",
+    "detail": "docs/DETAIL.md"
+  }
+}

@@ -1,0 +1,22 @@
+# 把 Alphapulse Quantify 的只读 MCP 服务接入 agent。
+#
+# 子进程的 cwd 是当前 profile 目录（DSH 实测），所以 args 用 profile 相对路径指向包内启动器；
+# launch.js 再用 __dirname 定位包内 quant_mcp.py，跟 cwd 无关。
+#
+# QUANTIFY_AQUANT_ROOT 改成你自己的 aquant 检出目录；也可用 QUANTIFY_PYTHON 直接指定解释器。
+- insert:
+    - id: quantify-mcp
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: quantify
+        transport: stdio
+        command: node
+        args:
+          - node_modules/alphapulse-quantify-mcp/server/launch.js
+        env:
+          QUANTIFY_AQUANT_ROOT: /Users/yueyue/Finance/Quantify/aquant
+          TZ: Asia/Shanghai
+          PYTHONUNBUFFERED: '1'
+        toolCallTimeoutMs: 600000
+        startupTimeoutMs: 30000
+        failOnStartupError: true

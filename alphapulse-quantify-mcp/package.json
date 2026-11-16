@@ -1,0 +1,23 @@
+{
+  "name": "alphapulse-quantify-mcp",
+  "version": "0.1.0",
+  "description": "Alphapulse Quantify: read-only quant-research tools (aquant strategies, paper accounts, market data) for DeepSeek Harness over MCP.",
+  "type": "module",
+  "license": "UNLICENSED",
+  "keywords": ["alphapulse", "dsh", "deepseek-harness", "mcp", "quant", "aquant"],
+  "engines": { "dsh": ">=0.2.2-rc.3", "node": ">=18" },
+  "exports": {
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg",
+    "./server/launch.js": "./server/launch.js"
+  },
+  "files": [
+    "cordis.patch.yml",
+    "locale/*.json",
+    "docs",
+    "icon.svg",
+    "server",
+    "README.md"
+  ],
+  "dsh": { "bundle": { "patch": "./cordis.patch.yml" } }
+}
