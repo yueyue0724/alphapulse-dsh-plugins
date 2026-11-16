@@ -1,0 +1,38 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install validator
+        run: npm install --no-audit --no-fund
+
+      - name: Validate market index
+        run: npm run check:index
+
+      - name: Check package contents
+        run: npm run check:package
+
+      - name: JavaScript syntax
+        run: node --check alphapulse-quantify-mcp/server/launch.js
+
+      - name: Python syntax
+        run: python3 -m py_compile alphapulse-quantify-mcp/server/quant_mcp.py
+
+      - name: Locales parse
+        run: |
+          node -e "for (const f of ['alphapulse-quantify-mcp/locale/en.json','alphapulse-quantify-mcp/locale/zh.json']) JSON.parse(require('fs').readFileSync(f,'utf8'))"
+          echo "locales ok"

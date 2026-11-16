@@ -1,0 +1,14 @@
+{
+  "name": "alphapulse-dsh-plugins",
+  "private": true,
+  "type": "module",
+  "description": "Alphapulse plugins for DeepSeek Harness: market index and packable bundles.",
+  "scripts": {
+    "check:index": "node scripts/check-index.mjs",
+    "check:package": "cd alphapulse-quantify-mcp && npm pack --dry-run",
+    "check": "npm run check:index && npm run check:package"
+  },
+  "devDependencies": {
+    "@deepseek-ai/dsh-plugin-market-index": "0.2.1-alpha.4"
+  }
+}

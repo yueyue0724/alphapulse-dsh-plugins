@@ -1,0 +1,52 @@
+name: publish
+
+# 打 tag 即发布：git tag v0.1.2 && git push origin v0.1.2
+#
+# 认证用 npm 可信发布（OIDC），不需要长期 token：
+#   npmjs.com → 包页面 → Settings → Trusted Publisher → GitHub Actions
+#   填 yueyue0724 / alphapulse-dsh-plugins / publish.yml
+# 若改用 token（粒化 token 需勾选 Bypass 2FA），在仓库 Secrets 里设 NPM_TOKEN，
+# 并取消下面 Publish 步骤的注释。
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Use latest npm (trusted publishing needs >= 11.5)
+        run: npm install -g npm@latest
+
+      - name: Install validator
+        run: npm install --no-audit --no-fund
+
+      - name: Tag must match package version
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          version=$(node -p "require('./alphapulse-quantify-mcp/package.json').version")
+          tag=${GITHUB_REF_NAME#v}
+          echo "tag=$tag package=$version"
+          test "$tag" = "$version"
+
+      - name: Index must list this version
+        run: npm run check:index
+
+      - name: Publish to npm
+        working-directory: alphapulse-quantify-mcp
+        run: npm publish --access public --provenance
+        # env:
+        #   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
