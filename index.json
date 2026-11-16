@@ -1,13 +1,21 @@
 {
   "format": 1,
-  "title": { "en": "Alphapulse plugins", "zh": "Alphapulse 插件源" },
+  "title": {
+    "en": "Alphapulse plugins",
+    "zh": "Alphapulse 插件源"
+  },
   "description": {
     "en": "Read-only quant research tooling from Alphapulse for DeepSeek Harness.",
     "zh": "Alphapulse 面向 DeepSeek Harness 的只读量化研究工具。"
   },
   "metadata": {
     "categories": {
-      "quant": { "title": { "en": "Quant research", "zh": "量化研究" } }
+      "quant": {
+        "title": {
+          "en": "Quant research",
+          "zh": "量化研究"
+        }
+      }
     },
     "labels": {},
     "sortKeys": {}
@@ -15,7 +23,10 @@
   "plugins": [
     {
       "name": "alphapulse-quantify-mcp",
-      "title": { "en": "Alphapulse research console", "zh": "Alphapulse 量化研究台" },
+      "title": {
+        "en": "Alphapulse research console",
+        "zh": "Alphapulse 量化研究台"
+      },
       "description": {
         "en": "16 read-only MCP tools for aquant strategies, paper accounts, data health, scheduled jobs and notifications, backtest artifacts, and daily bars, adjustment factors, valuation snapshots, eligibility, calendar, and index series. No database writes, orders, or messages.",
         "zh": "16 个只读 MCP 工具：策略清单、模拟盘状态、数据健康、定时任务与推送记录、回测产物，以及日线、复权、估值、资格、日历与指数。不写库、不下单、不发消息。"
@@ -24,18 +35,33 @@
       "author": "Alphapulse",
       "metadata": {
         "category": "quant",
-        "keywords": ["alphapulse", "quant", "aquant", "mcp", "finance"],
+        "keywords": [
+          "alphapulse",
+          "quant",
+          "aquant",
+          "mcp",
+          "finance"
+        ],
         "labels": [],
         "sortKeys": {}
       },
       "versions": [
         {
           "version": "0.1.0",
-          "publishTimestamp": 1794815185,
-          "source": { "type": "npm" },
-          "engines": { "dsh": ">=0.2.2-rc.3" }
+          "publishTimestamp": 1794815875,
+          "source": {
+            "type": "npm"
+          },
+          "engines": {
+            "dsh": ">=0.2.2-rc.3"
+          }
         }
-      ]
+      ],
+      "repository": {
+        "url": "https://github.com/yueyue0724/alphapulse-dsh-plugins",
+        "directory": "alphapulse-quantify-mcp"
+      },
+      "homepage": "https://github.com/yueyue0724/alphapulse-dsh-plugins"
     }
   ]
 }
