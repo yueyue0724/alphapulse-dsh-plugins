@@ -21,7 +21,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 AQUANT_ROOT = Path(
-    os.environ.get("QUANTIFY_AQUANT_ROOT") or "/Users/yueyue/Finance/Quantify/aquant"
+    os.environ.get("QUANTIFY_AQUANT_ROOT") or (Path.home() / "Finance/Quantify/aquant")
 ).expanduser()
 QUANTDATA_ROOT = Path(
     os.environ.get("QUANTIFY_QUANTDATA_ROOT") or str(AQUANT_ROOT.parent / "QuantData")

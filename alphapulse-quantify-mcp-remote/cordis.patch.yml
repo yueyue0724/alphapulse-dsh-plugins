@@ -1,0 +1,34 @@
+# 远程模式：本机不需要 Python / aquant，只把 stdio 通过 SSH 转发到生产机。
+#
+# 前置：
+#   1. 本机有 ssh 客户端（Windows 10+ 自带 OpenSSH Client）；
+#   2. 已配置到 alphapulse@192.168.50.53 的免密登录（密钥，不是密码）：
+#        ssh-keygen -t ed25519        # 若还没有密钥
+#        ssh-copy-id alphapulse@192.168.50.53
+#      先手工验证：ssh -T alphapulse@192.168.50.53 'echo ok'
+#   3. 生产机上存在服务端脚本 $HOME/Finance/Quantify/quantify-mcp-server.py
+#      （由仓库部署步骤复制，见 README）。
+#
+# 主机用 ~/.ssh/config 里的别名（本机已存在）。换机器就改这里，并在那台机器的
+# ~/.ssh/config 里定义同名 Host。
+- insert:
+    - id: quantify-remote-mcp
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: quantify-remote
+        transport: stdio
+        command: ssh
+        args:
+          - '-T'
+          - '-o'
+          - BatchMode=yes
+          - '-o'
+          - ConnectTimeout=10
+          - stock-researcher-macmini
+          - >-
+            cd $HOME/Finance/Quantify/aquant &&
+            QUANTIFY_AQUANT_ROOT=$HOME/Finance/Quantify/aquant
+            .venv/bin/python $HOME/Finance/Quantify/quantify-mcp-server.py
+        toolCallTimeoutMs: 600000
+        startupTimeoutMs: 40000
+        failOnStartupError: true

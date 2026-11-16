@@ -1,0 +1,28 @@
+{
+  "name": "alphapulse-quantify-mcp-remote",
+  "version": "0.1.3",
+  "description": "Alphapulse Quantify over SSH: the same read-only quant tools, served on the production host for machines without a local aquant checkout.",
+  "type": "module",
+  "license": "UNLICENSED",
+  "keywords": ["alphapulse", "dsh", "deepseek-harness", "mcp", "quant", "ssh"],
+  "engines": { "dsh": ">=0.2.2-rc.3" },
+  "exports": {
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "cordis.patch.yml",
+    "locale/*.json",
+    "docs",
+    "icon.svg",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yueyue0724/alphapulse-dsh-plugins.git",
+    "directory": "alphapulse-quantify-mcp-remote"
+  },
+  "homepage": "https://github.com/yueyue0724/alphapulse-dsh-plugins#readme",
+  "bugs": { "url": "https://github.com/yueyue0724/alphapulse-dsh-plugins/issues" },
+  "dsh": { "bundle": { "patch": "./cordis.patch.yml" } }
+}

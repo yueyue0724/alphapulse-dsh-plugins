@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "Alphapulse research console (remote)",
+    "description": "The same 16 read-only Quantify tools as the local console, but the MCP server runs on the Alphapulse production host and this machine only forwards stdio over SSH. Tools appear as mcp__quantify-remote__*. Use this variant when the machine has no aquant checkout or Python environment of its own — it needs only an ssh client and key-based login to alphapulse@192.168.50.53. Because the server runs against production, its market data is the freshest available (check data_health for the latest closed session). Every tool is side-effect free: no writes, orders, or messages. Turning the plugin off removes every mcp__quantify-remote__* tool.",
+    "detail": "docs/DETAIL.md"
+  }
+}

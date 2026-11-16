@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "Alphapulse 量化研究台（远程）",
+    "description": "与本地版相同的 16 个只读量化工具，但 MCP 服务跑在 Alphapulse 生产机上，本机只通过 SSH 转发 stdio。工具名形如 mcp__quantify-remote__*。适用于没有 aquant 仓库或 Python 环境的机器——只需要 ssh 客户端和到 alphapulse@192.168.50.53 的免密登录。因为服务端连的是生产库，行情是最新的（用 data_health 确认最近已收盘交易日）。全部工具无副作用：不写库、不下单、不发消息。关闭插件即移除全部 mcp__quantify-remote__* 工具。",
+    "detail": "docs/DETAIL.zh.md"
+  }
+}

@@ -24,7 +24,7 @@ jobs:
         run: npm run check:index
 
       - name: Check package contents
-        run: npm run check:package
+        run: npm run check:pack
 
       - name: JavaScript syntax
         run: node --check alphapulse-quantify-mcp/server/launch.js
@@ -34,5 +34,5 @@ jobs:
 
       - name: Locales parse
         run: |
-          node -e "for (const f of ['alphapulse-quantify-mcp/locale/en.json','alphapulse-quantify-mcp/locale/zh.json']) JSON.parse(require('fs').readFileSync(f,'utf8'))"
+          node -e "for (const d of ['alphapulse-quantify-mcp','alphapulse-quantify-mcp-remote']) for (const f of ['en','zh']) JSON.parse(require('fs').readFileSync(d+'/locale/'+f+'.json','utf8'))"
           echo "locales ok"

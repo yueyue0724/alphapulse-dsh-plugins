@@ -1,12 +1,12 @@
 name: publish
 
-# 打 tag 即发布：git tag v0.1.2 && git push origin v0.1.2
+# 打 tag 即发布两个包：git tag v0.1.4 && git push origin v0.1.4
 #
-# 认证用 npm 可信发布（OIDC），不需要长期 token：
+# 认证用 npm 可信发布（OIDC），不需要长期 token。每个包都要单独配置一次：
 #   npmjs.com → 包页面 → Settings → Trusted Publisher → GitHub Actions
-#   填 yueyue0724 / alphapulse-dsh-plugins / publish.yml
-# 若改用 token（粒化 token 需勾选 Bypass 2FA），在仓库 Secrets 里设 NPM_TOKEN，
-# 并取消下面 Publish 步骤的注释。
+#   yueyue0724 / alphapulse-dsh-plugins / publish.yml / environment 留空
+#   并在 Allowed actions 里勾上 `npm publish`（漏勾会 403 OIDC permission denied）。
+# 若改用 token：在仓库 Secrets 设 NPM_TOKEN，并取消 Publish 步骤 env 的注释。
 
 on:
   push:
@@ -20,6 +20,12 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+          - alphapulse-quantify-mcp
+          - alphapulse-quantify-mcp-remote
     steps:
       - uses: actions/checkout@v5
 
@@ -37,16 +43,28 @@ jobs:
       - name: Tag must match package version
         if: startsWith(github.ref, 'refs/tags/v')
         run: |
-          version=$(node -p "require('./alphapulse-quantify-mcp/package.json').version")
+          version=$(node -p "require('./${{ matrix.package }}/package.json').version")
           tag=${GITHUB_REF_NAME#v}
-          echo "tag=$tag package=$version"
+          echo "${{ matrix.package }}: tag=$tag package=$version"
           test "$tag" = "$version"
 
       - name: Index must list this version
         run: npm run check:index
 
+      - name: Already on npm?
+        id: published
+        run: |
+          version=$(node -p "require('./${{ matrix.package }}/package.json').version")
+          if npm view "${{ matrix.package }}@$version" version >/dev/null 2>&1; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "${{ matrix.package }}@$version 已发布，跳过"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Publish to npm
-        working-directory: alphapulse-quantify-mcp
+        if: steps.published.outputs.skip != 'true'
+        working-directory: ${{ matrix.package }}
         run: npm publish --access public --provenance
         # env:
         #   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

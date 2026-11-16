@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * 校验 index.json：格式、包名、当前版本、版本排序、图标文件。
+ * 校验 index.json 与本地两个包一致：格式、包名、当前版本、版本排序、图标。
  * 用官方解析器（@deepseek-ai/dsh-plugin-market-index）保证 schema 不漂移。
  */
 import { existsSync, readFileSync } from 'node:fs'
@@ -9,10 +9,9 @@ import { fileURLToPath } from 'node:url'
 import { parseMarketIndex } from '@deepseek-ai/dsh-plugin-market-index'
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)))
-const pkgDir = join(root, 'alphapulse-quantify-mcp')
-const pkg = JSON.parse(readFileSync(join(pkgDir, 'package.json'), 'utf8'))
-const raw = JSON.parse(readFileSync(join(root, 'index.json'), 'utf8'))
+const PACKAGES = ['alphapulse-quantify-mcp', 'alphapulse-quantify-mcp-remote']
 
+const raw = JSON.parse(readFileSync(join(root, 'index.json'), 'utf8'))
 let failed = false
 const ok = (m) => console.log(`✓ ${m}`)
 const fail = (m) => {
@@ -29,36 +28,39 @@ try {
   process.exit(1)
 }
 
-const entry = index.plugins.find((p) => p.name === pkg.name)
-if (!entry) {
-  fail(`索引里没有包 ${pkg.name}`)
-  process.exit(1)
-}
-ok(`索引含 ${pkg.name}`)
+for (const dir of PACKAGES) {
+  const pkg = JSON.parse(readFileSync(join(root, dir, 'package.json'), 'utf8'))
+  const entry = index.plugins.find((p) => p.name === pkg.name)
+  if (!entry) {
+    fail(`索引里没有包 ${pkg.name}`)
+    continue
+  }
 
-const versions = entry.versions.map((v) => v.version)
-if (!versions.includes(pkg.version)) {
-  fail(`索引缺少当前版本 ${pkg.version}（已列出 ${versions.join(', ') || '无'}）`)
-} else {
-  ok(`索引含当前版本 ${pkg.version}`)
-}
-
-const sorted = [...versions].sort((a, b) => b.localeCompare(a, undefined, { numeric: true }))
-if (versions.join('|') !== sorted.join('|')) fail('versions 未按版本降序排列')
-
-if (entry.icon) {
-  const relative = raw.plugins.find((p) => p.name === pkg.name).icon
-  if (relative.startsWith('http') || relative.startsWith('data:')) {
-    ok('icon 为绝对地址，跳过文件检查')
-  } else if (!existsSync(join(root, relative))) {
-    fail(`icon 文件不存在：${relative}`)
+  const versions = entry.versions.map((v) => v.version)
+  if (!versions.includes(pkg.version)) {
+    fail(`${pkg.name} 索引缺少当前版本 ${pkg.version}（已列出 ${versions.join(', ') || '无'}）`)
   } else {
-    ok(`icon 文件存在：${relative}`)
+    ok(`${pkg.name}@${pkg.version} 已列入索引`)
+  }
+
+  const sorted = [...versions].sort((a, b) => b.localeCompare(a, undefined, { numeric: true }))
+  if (versions.join('|') !== sorted.join('|')) fail(`${pkg.name} 的 versions 未按降序排列`)
+
+  const declared = raw.plugins.find((p) => p.name === pkg.name)?.icon
+  if (!declared) {
+    ok(`${pkg.name} 未声明 icon`)
+  } else if (declared.startsWith('http') || declared.startsWith('data:')) {
+    ok(`${pkg.name} icon 为绝对地址`)
+  } else if (!existsSync(join(root, declared))) {
+    fail(`${pkg.name} 的 icon 文件不存在：${declared}`)
+  } else {
+    ok(`${pkg.name} icon 存在：${declared}`)
   }
 }
 
-if (raw.plugins.some((p) => p.name !== pkg.name)) {
-  fail('索引里出现了与当前包无关的插件条目')
+const localNames = new Set(PACKAGES.map((d) => JSON.parse(readFileSync(join(root, d, 'package.json'), 'utf8')).name))
+for (const plugin of index.plugins) {
+  if (!localNames.has(plugin.name)) fail(`索引里的 ${plugin.name} 在仓库中没有对应包`)
 }
 
 process.exit(failed ? 1 : 0)

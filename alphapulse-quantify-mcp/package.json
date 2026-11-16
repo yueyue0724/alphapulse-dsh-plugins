@@ -1,6 +1,6 @@
 {
   "name": "alphapulse-quantify-mcp",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Alphapulse Quantify: read-only quant-research tools (aquant strategies, paper accounts, market data) for DeepSeek Harness over MCP.",
   "type": "module",
   "license": "UNLICENSED",
