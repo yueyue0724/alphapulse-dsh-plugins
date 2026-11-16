@@ -76,3 +76,26 @@ plugin_manager install_bundle  target: alphapulse-quantify-mcp@0.1.0
 - 需要能 `import aquant` 的 Python：默认用 `$QUANTIFY_AQUANT_ROOT/.venv/bin/python`，
   也可用 `QUANTIFY_PYTHON` 指定。
 - 只读：无写入/下单/推送工具，MCP 客户端也没有逐工具审批。
+
+## 7. 走 CI 发版（可信发布 / OIDC）
+
+仓库里 `\.github/workflows/publish.yml` 在推 `v*` tag 时发布，不需要任何长期 token：
+
+```bash
+# 1. 改 alphapulse-quantify-mcp/package.json 的 version
+# 2. 在 index.json 的 versions 数组最前面加同版本条目
+git add -A && git commit -m "release: X.Y.Z"
+git tag vX.Y.Z && git push origin main && git push origin vX.Y.Z
+```
+
+一次性配置（只做一次）：npmjs.com → 包 → Settings → Trusted Publisher → GitHub Actions，四个字段
+`yueyue0724` / `alphapulse-dsh-plugins` / `publish.yml` / environment 留空，并在 **Allowed actions**
+里勾上 `npm publish`。漏勾这一项的表现是：provenance 签名成功，但 registry 回
+`403 OIDC permission denied for this action`。
+
+两个已知的安装侧延迟（不是发布失败）：
+
+- 新版刚发布时，`registry.npmjs.org` 的 packument 里已经有版本，但 tarball 可能还 404 几分钟；
+  等 CDN 同步后再装。
+- 安装时若回退到 `registry.npmmirror.com`，镜像可能还没同步新版本；`install_bundle` 显式传
+  `registry: https://registry.npmjs.org/` 可绕过。
